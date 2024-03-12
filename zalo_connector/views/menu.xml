@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <menuitem name="ChatRoom" id="acrux_live_chat_conversation_menu"
+            parent="zalo_configuration.zalo_configuration_base"
+            sequence="1" action="acrux_live_chat_action" groups="zalo_connector.group_chat_basic_extra"/>
+        <menuitem name="Message" id="zalo_message_root_menu"
+            parent="zalo_configuration.zalo_configuration_base"
+            sequence="10"/>
+        <menuitem action="view_zalo_connector_conversation_action"
+            id="zalo_connector_conversation_menu"
+            parent="zalo_message_root_menu"
+            sequence="5"/>
+        <menuitem action="view_zalo_connector_message_action"
+            id="zalo_message_menu"
+            parent="zalo_message_root_menu"
+            sequence="10"/>
+        <menuitem name="Send Message"
+              action="zalo_message_wizard_action"
+              id="zalo_message_wizard_menu"
+              parent="zalo_message_root_menu" sequence="20"/>
+        <menuitem id="view_zalo_connector_settings_menu"
+            parent="zalo_configuration.zalo_configuration_base"
+            name="Settings"
+            sequence="200"/>
+        <menuitem action="view_zalo_connector_setting_action"
+            id="view_zalo_connector_setting_menu"
+            parent="view_zalo_connector_settings_menu"
+            sequence="1"/>
+        <menuitem action="view_zalo_connector_default_answer_action"
+            id="view_zalo_connector_default_answer_menu"
+            parent="view_zalo_connector_settings_menu"
+            sequence="10"/>
+
+    </data>
+</odoo>

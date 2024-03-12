@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id='zalo_message_form' model='ir.ui.view'>
+        <field name="name">zalo.message.form</field>
+        <field name="model">zalo.message</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_send" string="Send" type="object" class="oe_highlight"/>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="message" required="1"/>
+                        <field name="line_ids" readonly="1">
+                            <tree>
+                                <field name="partner_id" avatar_field="image_128"/>
+                                <field name="time_received"/>
+                                <field name="time_seen"/>
+                            </tree>
+                            <form>
+                                <sheet>
+                                    <field name="partner_id" avatar_field="image_128"/>
+                                    <field name="time_received"/>
+                                    <field name="time_seen"/>
+                                </sheet>
+                            </form>
+                        </field>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" groups="base.group_user"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+
+    <record id='zalo_message_tree' model='ir.ui.view'>
+        <field name="name">zalo.message.tree</field>
+        <field name="model">zalo.message</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="message"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="zalo_message_action" model="ir.actions.act_window">
+        <field name="name">Zalo Message</field>
+        <field name="res_model">zalo.message</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree,form</field>
+        <field name="target">current</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Logger
+            </p>
+        </field>
+    </record>
+
+    <record id="zalo_message_action_new" model="ir.actions.act_window">
+        <field name="name">Zalo Message</field>
+        <field name="res_model">zalo.message</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Logger
+            </p>
+        </field>
+    </record>
+</odoo>

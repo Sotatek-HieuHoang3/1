@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+<data>
+    <function model="product.product" name="action_attach_product">
+        <function eval="[[('id','=',1)]]" model="product.product" name="search"/>
+    </function>
+
+    <record id="view_attachment_form" model="ir.ui.view">
+        <field name="name">ir.attachment.acrux.chat.form</field>
+        <field name="model">ir.attachment</field>
+        <field name="inherit_id" ref="base.view_attachment_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='res_model']" position="before">
+                <field name="delete_old"/>
+            </xpath>
+        </field>
+    </record>
+
+</data>
+</odoo>

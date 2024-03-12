@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="zalo_configuration_form_inherit" model="ir.ui.view">
+        <field name="name">zalo.configuration.inherit.view.form</field>
+        <field name="model">zalo.configuration</field>
+        <field name="inherit_id" ref="zalo_configuration.zalo_configuration_form"/>
+        <field name="arch" type="xml">
+            <button name="get_authorization_code" position="after">
+                <button type="object" string="Get New Zalo Contacts"
+                    name="action_get_user_ids" class="oe_highlight"/>
+            </button>
+<!--            <xpath expr="//sheet//group" position="after">-->
+<!--                <field name="mapping_partner_ids">-->
+<!--                    <tree editable="bottom">-->
+<!--                        <field name="name"/>-->
+<!--                        <field name="message"/>-->
+<!--                        <field name="zalo_user_id"/>-->
+<!--                        <field name="partner_id"/>-->
+<!--                        <field name="zalo_user_id" invisible="1"/>-->
+<!--                        <button type="object" string="Map Contact"-->
+<!--                                name="action_mapping_contact" class="oe_highlight"/>-->
+<!--                    </tree>-->
+<!--                </field>-->
+<!--            </xpath>-->
+        </field>
+    </record>
+</odoo>

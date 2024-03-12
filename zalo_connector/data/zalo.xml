@@ -1,0 +1,12 @@
+<odoo>
+    <record id="autovacuum_zalo_data" model="ir.cron">
+        <field name="name">Zalo: Auto-vacuum internal data</field>
+        <field name="model_id" ref="model_zalo_configuration"/>
+        <field name="state">code</field>
+        <field name="code">model.action_get_user_ids()</field>
+        <field name='interval_number'>1</field>
+        <field name='interval_type'>minutes</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+    </record>
+</odoo>

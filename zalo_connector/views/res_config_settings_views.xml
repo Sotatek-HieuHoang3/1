@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit ChatRoom</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="6"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('settings')]" position="inside">
+                <div class="app_settings_block" data-string="ChatRoom" string="ChatRoom" data-key="zalo_connector"
+                     groups="zalo_connector.group_chat_basic_extra">
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="text-center" style="font-size: 1.5rem;">
+                                <b>Welcome to ChatRoom</b>
+                            </div>
+                            <h6 class="mt16 text-center" style="font-weight: normal;">
+                                <i>The most complete series of Modules<br/>for Zalo support</i>
+                            </h6>
+                        </div>
+                    </div>
+                    <h2 class="acrux_templates_hide">Message Templates</h2>
+                    <div name="acrux_templates" class="row mt16 o_settings_container acrux_templates_hide">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane"/>
+                            <div class="o_setting_right_pane" name="acrux_templates_link">
+                                <h6>Templates available in:</h6>
+                                <div class="mb8 text-muted"><i>Template name must begin with the word "<b>ChatRoom</b>".</i></div>
+                                <div style="width: 40%; display: inline-block;">
+                                    <button name="open_resource_tree" icon="fa-arrow-right" class="btn-link" type="object"
+                                            context="{'acrux_model': ['zalo_connector.model_acrux_chat_conversation']}"
+                                            string="Chat"/>
+                                </div>
+                                <div style="width: 40%; display: inline-block;">
+                                    <button name="open_resource_tree" icon="fa-arrow-right" class="btn-link" type="object"
+                                            context="{'acrux_model': ['base.model_res_partner']}"
+                                            string="Partner"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_zalo_connector_setting_action" model="ir.actions.act_window">
+        <field name="name">Config</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_id" ref="res_config_settings_view_form"/>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module' : 'zalo_connector', 'bin_size': False}</field>
+    </record>
+</odoo>
