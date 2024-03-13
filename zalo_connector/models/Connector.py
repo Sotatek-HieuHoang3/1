@@ -559,11 +559,10 @@ class AcruxChatConnector(models.Model):
             return ret
 
     def assert_id(self, key):
-        # self.ensure_one()
-        # if key != self.clean_id(key):
-        #     raise ValidationError(_('Invalid number'))
-        # phone_format(key, formatted=False)  # to check
-        return key
+        self.ensure_one()
+        if key != self.clean_id(key):
+            raise ValidationError(_('Invalid number'))
+        phone_format(key, formatted=False)  # to check
 
     def clean_id(self, key):
         self.ensure_one()

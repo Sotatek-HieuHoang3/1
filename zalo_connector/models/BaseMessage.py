@@ -9,6 +9,8 @@ class ModelCommon(models.AbstractModel):
 
     active = fields.Boolean(default=True)
     text = fields.Text('Message')
-    ttype = fields.Selection([('text', 'Text'), ('file', 'File')], string='Type', required=True, default='text')
+    ttype = fields.Selection([('text', 'Text'),
+                               ('file', 'File')],
+                             string='Type', required=True, default='text')
     res_model = fields.Char('Model', readonly=True)
     res_id = fields.Integer('Id', readonly=True)

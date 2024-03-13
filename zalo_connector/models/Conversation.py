@@ -37,7 +37,6 @@ class AcruxChatConversation(models.Model):
     connector_id = fields.Many2one('acrux.chat.connector', 'Connector', required=True,
                                    ondelete='cascade', default=lambda self: self.env['acrux.chat.connector'].search([], limit=1).id)
     res_partner_id = fields.Many2one('res.partner', 'Client', required=True)
-    ref = fields.Char(related="res_partner_id.ref", store=True)
     status = fields.Selection([('new', 'New'),
                                ('current', 'Current'),
                                ('done', 'Done')], 'Status', required=True,
@@ -95,17 +94,17 @@ class AcruxChatConversation(models.Model):
         for r in self.filtered(lambda conv: conv.connector_id and conv.number):
             r.connector_id.assert_id(r.number)
 
-    # @api.onchange('number', 'connector_id')
-    # def _onchange_number(self):
-    #     for r in self.filtered(lambda conv: conv.connector_id and conv.number):
-    #         r.number = r.connector_id.clean_id(r.number)
+    @api.onchange('number', 'connector_id')
+    def _onchange_number(self):
+        for r in self.filtered(lambda conv: conv.connector_id and conv.number):
+            r.number = r.connector_id.clean_id(r.number)
 
     @api.onchange('res_partner_id')
     def onchange_res_partner_id(self):
         if self.res_partner_id and self.env.context.get('set_default'):
             self.name = self.res_partner_id.name
-            # number = self.res_partner_id.mobile or self.res_partner_id.phone
-            # self.number = self.connector_id.clean_id(number) if number else False
+            number = self.res_partner_id.mobile or self.res_partner_id.phone
+            self.number = self.connector_id.clean_id(number) if number else False
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -166,34 +165,7 @@ class AcruxChatConversation(models.Model):
                      'done': 'to_done',
                      'current': 'to_curr'}
             self.event_create(event.get(vals['status']))
-        old_partner = self.res_partner_id
-        res = super(AcruxChatConversation, self).write(vals)
-        # map exist partner
-        if old_partner and 'res_partner_id' in vals and old_partner.id != vals['res_partner_id']:
-            for rec in self:
-                ref = ''
-                if not rec.res_partner_id.ref:
-                    ref = old_partner.name
-                old_partner.name or rec.res_partner_id.ref
-                rec.res_partner_id.write({
-                    'zalo_user_id': old_partner.zalo_user_id,
-                    'ref': ref,
-                })
-                old_partner.write({
-                    'zalo_user_id': '',
-                })
-        for rec in self:
-            if rec.status == 'done':
-                rec.status = 'new'
-            if not rec.agent_id:
-                rec.agent_id = self.env.user.id or 2
-        return res
-
-    @api.constrains('res_partner_id')
-    def upgrade_conversation(self):
-        if self.res_partner_id:
-            self.name = self.res_partner_id.name
-            self.number = self.res_partner_id.ref
+        return super(AcruxChatConversation, self).write(vals)
 
     def event_create(self, event, user_id=False, text=False):
         if not self.env.context.get('not_log_event'):
@@ -232,12 +204,10 @@ class AcruxChatConversation(models.Model):
 
     @api.depends('number', 'connector_id')
     def _compute_number_format(self):
-        # to_process = self.filtered(lambda conv: conv.connector_id and conv.number)
-        # for rec in to_process:
-        #     rec.number_format = rec.connector_id.format_id(rec.number)
-        # for rec in self - to_process:
-        #     rec.number_format = rec.number
-        for rec in self:
+        to_process = self.filtered(lambda conv: conv.connector_id and conv.number)
+        for rec in to_process:
+            rec.number_format = rec.connector_id.format_id(rec.number)
+        for rec in self - to_process:
             rec.number_format = rec.number
 
     @api.depends('name', 'number_format')
@@ -259,8 +229,6 @@ class AcruxChatConversation(models.Model):
             domain = []
         else:
             domain = ['|', ('name', 'ilike', name), ('number', 'ilike', name)]
-            if self.res_partner_id and self.res_partner_id.ref:
-                domain = ['|', ('name', 'ilike', name), ('res_partner_id.ref', 'ilike', name)]
         return self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
 
     def get_to_done(self):
@@ -365,7 +333,7 @@ class AcruxChatConversation(models.Model):
             'connector_id': data['connector_id'],
             'valid_number': 'yes',
             'is_waba_opt_in': True,
-            # 'number': data['number']
+            'number': data['number']
         }
 
     def decide_first_status(self):
@@ -734,11 +702,11 @@ class AcruxChatConversation(models.Model):
             connector_id = Connector.browse(connector_id)
         else:
             connector_id = Connector.search([], limit=1)
-        # number = connector_id.clean_id(number)
-        # connector_id.assert_id(number)
+        number = connector_id.clean_id(number)
+        connector_id.assert_id(number)
         vals = {
-            # 'name': number,
-            # 'number': number,
+            'name': number,
+            'number': number,
             'connector_id': connector_id.id,
             'status': 'done'
         }
@@ -781,7 +749,7 @@ class AcruxChatConversation(models.Model):
             'connector_id': connector_id.id,
             'name': message.get('name'),
             'msgid': message.get('id', False),
-            # 'number': connector_id.clean_id(message.get('number', '')),
+            'number': connector_id.clean_id(message.get('number', '')),
             'message': text.strip(),
             'filename': message.get('filename', ''),
             'url': message.get('url', ''),
@@ -795,8 +763,8 @@ class AcruxChatConversation(models.Model):
 
     @api.model
     def parse_contact_receive(self, connector_id, data):
-        # data['number'] = connector_id.clean_id(data.get('number', ''))
-        return ''
+        data['number'] = connector_id.clean_id(data.get('number', ''))
+        return data
 
     @api.model
     def parse_event_receive(self, connector_id, event):

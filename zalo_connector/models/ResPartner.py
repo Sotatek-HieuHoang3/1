@@ -33,12 +33,6 @@ class ResPartner(models.Model):
                 ctx['default_country_id'] = country_id.id
         return super(ResPartner, self.with_context(ctx)).default_get(default_fields)
 
-    @api.constrains('name')
-    def upgrade_conversation(self):
-        if self.contact_ids:
-            for contact in self.contact_ids:
-                contact.write({'name': self.name})
-
     @api.depends('mobile', 'phone', 'country_id')
     def _compute_conv_standard_numbers(self):
 

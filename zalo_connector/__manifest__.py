@@ -1,5 +1,5 @@
 {
-    'name': 'Zalo Chat',
+    'name': 'Zalo Chat Room',
     'summary': 'Send and receive messages',
     'description': 'Send and receive messages',
     'version': '16.0.1',
